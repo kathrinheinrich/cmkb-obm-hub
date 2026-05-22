@@ -7,7 +7,32 @@
 <!--
   Mastery Hub · Operative Rollen
   ─────────────────────────────────────
-  v57_landing · 19. Mai 2026 · Logo-Klick · Mastery-Shift Modul 09 · Werte-Explorer Link
+  v61_operativ · 22. Mai 2026 · JSON Export/Import · Geräte-Transfer
+
+    Neu: Speicher-Schutzraum Stufe 2a — JSON Sicherung
+
+    Hintergrund:
+      localStorage ist browser- und gerätegebunden. Klientin mit altem
+      Reise-Gerät kann Daten nicht automatisch auf neuen Rechner übernehmen.
+      JSON Export/Import löst das vollständig lokal — kein Server, keine Cloud.
+
+    Änderungen:
+      · exportJSON() — speichert alle D-Daten als .json-Datei (Download)
+        Dateiname: mastery-hub-sicherung-YYYY-MM-DD.json
+        Payload-Struktur: {_version, _exported, _key, data}
+      · triggerImport() — öffnet nativen File-Picker
+      · importJSON(input) — liest .json, schreibt D, persist(), reload()
+      · Status-Popup erweitert:
+        · Action-Text: Hinweis auf JSON-Export als Geräte-Transfer-Option
+        · Zwei neue Buttons (spu-export / spu-import) unter der Action-Box
+      · CSS: .status-popup-btns, .status-popup-btn, .spu-export, .spu-import
+      · Hidden <input type="file"> vor Status-Pill (id: import-file-input)
+
+    Datenschutz:
+      · Datei verlässt das Gerät nie automatisch — Klientin entscheidet
+        selbst, wo sie die .json-Datei speichert (USB, eigene Cloud, etc.)
+      · Import liest nur lokale Datei — kein Netzwerk-Request
+      · Speicher-Hoheit vollständig bei der Klientin
     Iteration nach Login-Walkthrough mit Kathrin.
 
     Bug-Fixes:
@@ -582,6 +607,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--flora);color:var(--text);
 .status-popup-action strong{color:var(--grnf);}
 .status-popup-close{position:absolute;top:10px;right:12px;width:24px;height:24px;border-radius:50%;background:transparent;border:none;font-size:18px;color:var(--grey-d);cursor:pointer;line-height:1;}
 .status-popup-close:hover{background:var(--sand);}
+.status-popup-btns{display:flex;flex-direction:column;gap:7px;margin-top:12px;}
+.status-popup-btn{display:flex;align-items:center;gap:8px;padding:10px 13px;border-radius:9px;border:none;cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:600;width:100%;text-align:left;transition:background .15s;letter-spacing:.01em;}
+.status-popup-btn.spu-export{background:#e8f4fd;color:#1a4a7a;}
+.status-popup-btn.spu-export:hover{background:#cfe6f7;}
+.status-popup-btn.spu-import{background:#f0f7e9;color:#2d4a1d;}
+.status-popup-btn.spu-import:hover{background:#dff0d8;}
 
 /* Modul-spezifische Farbvarianten */
 .wiz-landing-hero.mod-stakeholder{
@@ -4393,6 +4424,43 @@ function updateProg(idx){
 function load(){try{const r=localStorage.getItem(KEY);if(r)D=JSON.parse(r);}catch(e){}}
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(D));}catch(e){}}
 
+// ── JSON EXPORT / IMPORT · Geräte-Transfer ────────────────────────
+function exportJSON(){
+  saveAllInputs();
+  ['ctx-funktion','ctx-ziel'].forEach(id=>{const el=document.getElementById(id);if(el)D[id]=el.value;});
+  persist();
+  const payload={_version:1,_exported:new Date().toISOString(),_key:KEY,data:D};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='mastery-hub-sicherung-'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(url);document.body.removeChild(a);},500);
+}
+function triggerImport(){
+  const inp=document.getElementById('import-file-input');
+  if(inp)inp.click();
+}
+function importJSON(input){
+  const file=input.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const payload=JSON.parse(e.target.result);
+      const imported=payload.data||payload;
+      if(typeof imported!=='object'||Array.isArray(imported)){
+        alert('Die Datei konnte nicht gelesen werden. Bitte eine gültige Sicherungsdatei wählen.');
+        return;
+      }
+      D=imported;persist();location.reload();
+    }catch(err){alert('Fehler beim Importieren: '+(err.message||'unbekannt'));}
+  };
+  reader.readAsText(file);
+  input.value='';
+}
+
 // ── STATUS-PILL · Schutzraum-Popup ───────────────────────────────────
 function toggleStatusPopup(evt){
   if(evt) evt.stopPropagation();
@@ -5898,6 +5966,9 @@ try {
   </div>
 </div>
 
+<!-- ── HIDDEN FILE-INPUT für JSON-Import ─────────────────────────── -->
+<input type="file" id="import-file-input" accept=".json" style="display:none" onchange="importJSON(this)">
+
 <!-- ── PERSISTENTE STATUS-PILL · Schutzraum-Indikator ───────────────── -->
 <div class="status-pill" id="status-pill" onclick="toggleStatusPopup(event)" title="Schutzraum · Speicher-Hoheit bei dir">
   <span class="status-pill-dot"></span>
@@ -5912,7 +5983,11 @@ try {
     Kein Server. Keine Cloud. Niemand außer dir sieht diese Daten. Alle Eingaben bleiben ausschließlich in diesem Browser auf diesem Gerät.
   </div>
   <div class="status-popup-action">
-    💡 <span><strong>Damit deine strategische Vorarbeit erhalten bleibt:</strong> Setze diesen Link als Lesezeichen — immer derselbe Browser, dasselbe Gerät.</span>
+    💡 <span><strong>Damit deine strategische Vorarbeit erhalten bleibt:</strong> Setze diesen Link als Lesezeichen — immer derselbe Browser, dasselbe Gerät. Oder sichere deine Daten als JSON-Datei und importiere sie auf dem neuen Gerät.</span>
+  </div>
+  <div class="status-popup-btns">
+    <button class="status-popup-btn spu-export" onclick="exportJSON();closeStatusPopup(event)">📥 Daten exportieren · JSON-Datei sichern</button>
+    <button class="status-popup-btn spu-import" onclick="triggerImport();closeStatusPopup(event)">📤 Daten importieren · vom anderen Gerät</button>
   </div>
 </div>
 
