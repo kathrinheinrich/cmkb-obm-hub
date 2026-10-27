@@ -7,11 +7,20 @@
 <!--
   Mandats-Cockpit · Führungs-Variante
   ─────────────────────────────────────
+  v83_fuehrung · 27. Oktober 2026 · Meilenstein-Check Tag 60 ergebnisorientiert
+    Checkliste Tag 60 neu: „Ergebnisse sichern · Hebel setzen“, 10 Punkte —
+    Ergebnisse benannt (Warum ein Erfolg? Woran sieht man das? Wer hat es
+    gesehen?), Unternehmenskultur, kritische Konflikte, Beziehung zum
+    Vorgesetzten, Team, Stakeholder bis Tag 90, größte Hebel, Prioritäten
+    für den Sprint bis Tag 90 (max. drei, mit sichtbarem Ergebnis),
+    Transitionsplan, 60-Tage-Check-in vorbereitet. Passend zum Cold Run
+    Tag 50. Bisherige Haken unter t60 mit alten IDs bleiben gespeichert,
+    werden aber nicht mehr angezeigt.
   v82_fuehrung · 27. Oktober 2026 · Umstellung auf Kathrin Heinrich Consulting
     Neues Logo (KH_Logo_Gold_web, Gold, 600 px eingebettet) in Sidebar und
     Landing-Hero. Sichtbare Firmenbezeichnung überall auf „Kathrin Heinrich
     Consulting“: Seitentitel, Landing-Eyebrow, Copyright-Zeilen (Landing,
-    Sidebar), Nutzungshinweis, Mobile-Kopf, Profil-Unterzeile.
+    Sidebar), Login-Bildschirm, Nutzungshinweis, Mobile-Kopf, Profil-Unterzeile.
     Unverändert: Storage Keys (cmkb_…), Repo-URLs der verlinkten Tools,
     interne Kennungen (CMKB_COLORS, PRODID, UIDs).
   v81_fuehrung · 27. Oktober 2026 · Skript 02c „Checkliste · Tag 1“
@@ -4019,7 +4028,7 @@ button.cg-b{appearance:none;-webkit-appearance:none;display:block;color:#fff!imp
      ═══════════════════════════════════════════════════════════ -->
 <div id="login-screen" class="ln-off">
   <div class="login-box">
-    <div class="login-tag">Change Maker Karriere Beratung</div>
+    <div class="login-tag">Kathrin Heinrich Consulting</div>
     <div class="login-logo">Mastery Hub</div>
     <div class="login-sub">Onboarding Mastery · 100 Tage Companion</div>
     <label for="login-pw">Dein persönlicher Code</label>
@@ -9565,15 +9574,17 @@ try {
       {id:'hebel',   t:'Hebel und Prioritäten für Tag 31–60 formuliert', s:'Was bewegt am meisten?', go:['anpack',0]},
       {id:'memo',    t:'30-Tage-Check-in vorbereitet', s:'Prioritäten und offene Fragen für deinen Vorgesetzten', skript:'07'}
     ]},
-    {k:'t60', day:60, cr:50, col:'var(--gold-d)', phase:'Substanz aufbauen · erste Lieferung', items:[
-      {id:'ergebnis',t:'Erstes sichtbares Ergebnis geliefert', s:'Und so platziert, dass es gesehen wird', skript:'08'},
-      {id:'abgleich',t:'Prioritäten mit deinem Vorgesetzten abgeglichen', s:'Stimmt die Richtung noch?', go:['anpack',0]},
-      {id:'macht2',  t:'Machtlandkarte geschärft', s:'Wer hat Einfluss? Wer fehlt noch?', go:['stakeholder',0]},
-      {id:'bez',     t:'Beziehungen zu kritischen Stakeholdern tragen', s:'Lücken sind benannt', go:['stakeholder',0]},
-      {id:'regeln2', t:'Unausgesprochene Regeln überprüft', s:'Was hat sich bestätigt, was nicht?', go:['gespraech',0]},
-      {id:'plan60',  t:'Transitionsplan aktualisiert', s:'Stand Tag 60', papier:true},
-      {id:'log',     t:'Action-Learning Log durchgesehen', s:'Was trägt? Was nicht?', go:['action',0]},
-      {id:'fokus90', t:'Fokus für Tag 61–90 gesetzt', s:'Drei Prioritäten, nicht mehr', go:['anpack',0]}
+    {k:'t60', day:60, cr:50, col:'var(--gold-d)', phase:'Ergebnisse sichern · Hebel setzen', items:[
+      {id:'erreicht', t:'Ergebnisse benannt: Was hast du erreicht?', s:'Warum ist das ein Erfolg? Woran sieht man das: Zahl, Entscheidung, Rückmeldung? Wer hat es gesehen?', skript:'08'},
+      {id:'kultur60', t:'Unternehmenskultur eingeordnet', s:'Was ist dir aufgefallen? Wo siehst du Verbesserungspunkte?', go:['gespraech',0]},
+      {id:'konflikt', t:'Kritische Konflikte benannt', s:'Welche Konflikte können deinen Erfolg beeinflussen? Wie gehst du damit um?', go:['stakeholder',0]},
+      {id:'vorges60', t:'Beziehung zum Vorgesetzten geprüft', s:'Wie hat sie sich entwickelt? Stimmen Rhythmus, Vertrauen, Entscheidungsrahmen?', go:['mandat',0]},
+      {id:'team',     t:'Team eingeschätzt', s:'Wo steht dein Team? Welche Baustellen gibt es, und was entscheidest du dazu?', go:['stakeholder',0]},
+      {id:'stake60',  t:'Stakeholder-Beziehungen geprüft', s:'Welche Beziehung muss bis Tag 90 tragfähiger werden?', go:['stakeholder',0]},
+      {id:'hebel60',  t:'Größte Hebel benannt', s:'Wo bewirkt dein Einsatz bis Tag 90 am meisten?', go:['anpack',0]},
+      {id:'sprint90', t:'Prioritäten für den Sprint bis Tag 90 gesetzt', s:'Höchstens drei, jede mit einem Ergebnis, an dem man den Erfolg sieht', go:['anpack',0]},
+      {id:'plan60',   t:'Transitionsplan aktualisiert', s:'Stand Tag 60', papier:true},
+      {id:'check60',  t:'60-Tage-Check-in vorbereitet', s:'Ergebnisse, Prioritäten und offene Fragen für deinen Vorgesetzten', go:['anpack',0]}
     ]},
     {k:'t90', day:90, cr:80, col:'var(--berry-d)', phase:'Sichtbarkeit · Bilanz vorbereiten', items:[
       {id:'meil',    t:'Meilensteine aus dem Erfolgsbild gegengelesen', s:'Eingetreten · teilweise · offen', go:['erfolg',0]},
